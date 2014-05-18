@@ -40,9 +40,9 @@ define(function (require) {
                 access_token = window.localStorage.getItem('access_token');
             }
             if (!access_token) {
-                var LOGIN_URL = window.location.host + '/login.html'
-                LOGIN_URL += window.storage.genreId ?  "#" + window.storage.genreId : "";
-                return window.location.href = LOGIN_URL;
+                var LOGIN_PATH = '/login.html';
+                LOGIN_PATH += window.storage.genreId ?  "#" + window.storage.genreId : "";
+                return window.location.pathname = LOGIN_PATH;
             }
             else {
                 window.localStorage['access_token'] = access_token;
