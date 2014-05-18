@@ -96,7 +96,10 @@ define(function (require) {
     }
 
     this.after('initialize', function () {
-      // init();
+      $('#text').bind('input', function() { 
+          startAnim(); // get the current value of the input field.
+      });
+      init();
     });
   }
 

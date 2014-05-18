@@ -178,6 +178,10 @@ define(function (require) {
       chats.push(msg.chat);
     };
 
+    this.presenceChanged = function(snapshot) {
+      this.trigger('dataPresence', { online : snapshot.val() === true});
+    };
+
     this.after('initialize', function () {
 
       // This is hacky. Firebase docs are a lie.
@@ -213,6 +217,9 @@ define(function (require) {
       this.on('uiNeedsUser',      this.sendUser);
       this.on('uiRated',          this.saveRating);
       this.on('uiChatted',        this.saveChat);
+
+      var presenceRef = new Firebase(this.attr.fireBaseUrl + ".info/authenticated");
+      presenceRef.on('value', this.presenceChanged);
 
       // this.on('turndownforwhat', this.getTurntUp);
     });

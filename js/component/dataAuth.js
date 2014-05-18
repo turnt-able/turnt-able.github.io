@@ -106,6 +106,8 @@ define(function (require) {
                             username: data.data.username
                         };
                         window.users.update(user_data);
+                        self.userRef = window.users.child(user_id);
+                        self.userRef.onDisconnect().remove();
                         self.broadCast(data);
                     }
                 },
@@ -116,12 +118,20 @@ define(function (require) {
         };
 
         this.broadCast = function(data) {
-            this.trigger(document, 'dataUserData', { user : data });
+            $(document).trigger('dataUserData', { user : data });
+        };
+
+        this.updateExistence = function(evt, msg) {
+            var online = msg.online;
+            if (online && this.userRef) {
+                self.userRef.onDisconnect().remove();
+            }
         };
 
         this.after('initialize', function () {
             this.on('uiNeedsAuth', this.fetchUser);
             this.on('uiNeedsUserData', this.fetchUserData);
+            this.on('dataPresence', this.updateExistence);
         });
     }
 });
