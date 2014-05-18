@@ -148,6 +148,11 @@ define(function (require) {
 
     this.saveRoom = function (snapshot) {
       window.roomVal = roomVal = snapshot.val();
+
+      if (!roomVal) {
+        self.initializeRoom();
+      }
+
       if (typeof tracklist !== 'undefined' && typeof roomVal !== 'undefined') {
         self.getTurntUp();
       }
@@ -179,7 +184,7 @@ define(function (require) {
     };
 
     this.presenceChanged = function(snapshot) {
-      this.trigger('dataPresence', { online : snapshot.val() === true});
+      self.trigger('dataPresence', { online : snapshot.val() === true});
     };
 
     this.after('initialize', function () {
