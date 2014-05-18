@@ -30,9 +30,6 @@ define(function (require) {
     UIUser.attachTo('#users');
     UIRating.attachTo('#rate-box');
     UIMarquee.attachTo(document);
-    DataState.attachTo(document,  {
-      fireBaseUrl: 'https://uralgosux.firebaseio.com/'
-    });
 
     var user = window.localStorage.getItem("user");
     if (!user) {
@@ -40,6 +37,14 @@ define(function (require) {
         DataAuth.attachTo(document);
     }
     PlaylistMaker.attachTo(document);
+
+    DataState.attachTo(document,  {
+      fireBaseUrl: 'https://uralgosux.firebaseio.com/'
+    });
+
+    setTimeout(function () {
+      $(document).trigger('turndownforwhat');
+    }, 100);
 
     // // test playlist
     // $(document).on('dataPlaylistTracks', function(event, msg) {
