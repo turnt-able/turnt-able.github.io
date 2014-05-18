@@ -24,9 +24,13 @@ define(function (require) {
     var fb;
     var users;
     var djs;
+    var room;
     var tracks;
     var tracklist;
     var roomVal;
+    var chats;
+    var chatsQuery;
+
     window.storage = storage;
 
     this.defaultAttrs({
@@ -69,7 +73,7 @@ define(function (require) {
       var data = user.val();
       data.id = user.name();
       self.trigger('dataUserLeft', { user: data });
-    };    
+    };
 
     this.userChanged = function (user) {
       var data = user.val();
@@ -95,7 +99,7 @@ define(function (require) {
           rating: user.val()
         }
       });
-    };    
+    };
 
     this.djChanged = function (user) {
       $('body').trigger('dataDJChanged', {
@@ -106,6 +110,25 @@ define(function (require) {
       });
     };
 
+    // Chat Events
+
+    this.chatAdded = function (chat) {
+      var data = chat.val();
+      data.id = chat.name().replace(/[^a-z0-9\-\_]/gi,'');
+      self.trigger('dataChatAdded', { chat : data });
+    };
+
+    this.chatRemoved = function (chat) {
+      var data = chat.val();
+      data.id = chat.name().replace(/[^a-z0-9\-\_]/gi,'');
+      self.trigger('dataChatRemoved', { chat : data });
+    };
+
+    this.chatChanged = function (chat) {
+      var data = chat.val();
+      data.id = chat.name().replace(/[^a-z0-9\-\_]/gi,'');
+      self.trigger('dataChatChanged', { chat : data });
+    };
 
     this.sendUser = function (evt, msg) {
       users.child(msg.id).val()
@@ -147,16 +170,23 @@ define(function (require) {
       }, cb);
     };
 
+    this.saveChat = function (evt, msg) {
+      chats.push(msg.chat);
+    };
+
     this.after('initialize', function () {
+
       // This is hacky. Firebase docs are a lie.
       self = this;
 
       // Create a firebase connection for this instance
       room  = window.room  = new Firebase(this.attr.fireBaseUrl + this.getGenreId());
-      
+
       users  = window.users  = room.child('users');
       djs    = window.djs    = room.child('djs');
       tracks = window.tracks = room.child('tracks');
+      chats  = window.chats  = room.child('chats');
+      chatsQuery = chats.limit(100);
 
       users.on('child_added',   this.userJoined);
       users.on('child_removed', this.userLeft);
@@ -169,11 +199,16 @@ define(function (require) {
       tracks.once('value',   this.saveTracks);
       room.once('value', this.saveRoom);
 
+      chatsQuery.on('child_added',   this.chatAdded);
+      chatsQuery.on('child_removed', this.chatRemoved);
+      chatsQuery.on('child_changed', this.chatChanged);
+
       this.on('uiNeedsGenreId',   this.sendGenreId);
       this.on('uiNeedsTrackList', this.sendTrackList);
       this.on('uiNeedsUserList',  this.sendUserList);
       this.on('uiNeedsUser',      this.sendUser);
       this.on('uiRated',          this.saveRating);
+      this.on('uiChatted',        this.saveChat);
 
       // this.on('turndownforwhat', this.getTurntUp);
     });
