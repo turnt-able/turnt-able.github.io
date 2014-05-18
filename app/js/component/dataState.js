@@ -141,7 +141,11 @@ define(function (require) {
     this.initializeRoom = function (cb) {
       room.set({
         current_track_idx: 0,
-        djs: null,
+        djs: {
+          'echonest': 0,
+          'gracenote': 0,
+          'musicgraph': 0
+        },
         tracks: null,
         users: null
       }, cb);
