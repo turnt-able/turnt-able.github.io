@@ -12,6 +12,7 @@ define(function (require) {
   var UIRating = require('component/uiRating');
   var UIMarquee = require('component/uiMarquee');
   var DataBAM = require('component/dataBAM');
+  var DataAuth = require('component/dataAuth');
 
   /**
    * Module exports
@@ -33,7 +34,6 @@ define(function (require) {
       fireBaseUrl: 'https://uralgosux.firebaseio.com/'
     });
     if (!window.storage || !window.storage.user) {
-        var DataAuth = require('component/dataAuth');
         DataAuth.attachTo(document);
     }
     PlaylistMaker.attachTo(document);

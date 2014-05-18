@@ -64,6 +64,10 @@ define(function (require) {
       bam.stop();
     };
 
+    this.setPlaylist = function (evt, msg) {
+      console.log(msg);
+    };
+
     this.after('initialize', function () {
       bam = new BeatsAudioManager("myBeatsPlayer");
 

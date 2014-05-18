@@ -23,7 +23,7 @@ define(function (require) {
     var users = {};
 
     this.defaultAttrs({
-      'template': '<div class="user bounce" id={{id}} style="background-image:url(/img/avatars/1_back_rock_h.png)"></div>'
+      'template': '<div class="user" id={{id}} style="background-image:url(/img/avatars/1_back_rock_h.png)"></div>'
     });
 
     this.$forUser = function (id) {
@@ -47,7 +47,13 @@ define(function (require) {
     };
 
     this.showUserRating = function (user) {
-      this.$forUser(user.id).fadeOut().html(user.rated).fadeIn();
+      var $user = this.$forUser(user.id).find('.user');
+      if (user.vote === 1) {
+        $user.addClass('bounce')  
+      } else {
+        $user.removeClass('bounce');
+      }
+      
     };
 
     this.after('initialize', function () {
