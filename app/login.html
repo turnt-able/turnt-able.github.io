@@ -17,7 +17,7 @@
       <form method="get" action="https://partner.api.beatsmusic.com/v1/oauth2/authorize">
         <input type="hidden" name="client_id" value="cwugqdk8f8em99j6yewzvq6m">
         <input type="hidden" name="response_type" value="token">
-        <input type="hidden" name="redirect_uri" value="http://127.0.0.1:8080/index.html">
+        <input id="preserved_redirect" type="hidden" name="redirect_uri" value="http://127.0.0.1:8080">
         <button type="submit" class="login_button">Log In
           <div>
             <img class="logo" src="/img/beats-logo.png">
@@ -25,6 +25,12 @@
         </button>
       </form>
     </div>
+    <script>
+      var redirect_uri_input = document.getElementById("preserved_redirect");
+      var redirect_uri = redirect_uri_input.value;
+      redirect_uri += window.location.hash;
+      redirect_uri_input.value = redirect_uri;
+    </script>
     <!-- Google Analytics -->
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
