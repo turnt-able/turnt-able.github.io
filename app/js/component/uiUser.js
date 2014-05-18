@@ -23,7 +23,7 @@ define(function (require) {
     var users = {};
 
     this.defaultAttrs({
-      'template': '<li class="user" id={{id}}>{{username}}{{vote}}</li>'
+      'template': '<div class="user bounce" id={{id}} style="background-image:url(/img/avatars/1_back_rock_h.png)"></div>'
     });
 
     this.$forUser = function (id) {
