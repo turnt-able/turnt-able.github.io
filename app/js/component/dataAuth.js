@@ -31,17 +31,6 @@ define(function (require) {
         }
     }
 
-    // TODO: status checking?
-    function get_user_success(data, status) {
-        if (data && data.result) {
-            window.storage.user = data.result;
-        }
-    }
-
-    function get_user_failure(data, status) {
-        console.error(status, data);
-    }
-
     function dataAuth() {
         var self = this;
 
@@ -49,6 +38,7 @@ define(function (require) {
             var access_token = querystring('access_token');
             if (!access_token) {
                 var LOGIN_URL = window.location.host + '/login.html'
+                LOGIN_URL += window.storage.genreId ?  "#" + window.storage.genreId : "";
                 return window.location = LOGIN_URL;
             }
 
@@ -60,8 +50,22 @@ define(function (require) {
                     xhr.setRequestHeader("Authorization", "Bearer " + access_token);
                     xhr.setRequestHeader("Access-Control-Allow-Origin", "*")
                 },
-                success: get_user_success,
-                failure: get_user_failure
+                success: function(data, status) {
+                    if (data && data.result) {
+                        window.localStorage["user"] = JSON.stringify(data.result);
+                        var user_id = data.result.user_context;
+                        var user = {};
+                        user[user_id] = {
+                            vote: 0,
+                            data: data.result,
+                            //username: data.result.username, // TODO: fetch separately, does not come from /me
+                        };
+                        window.users.push(user);
+                    }
+                },
+                failure: function(data, status) {
+                    console.error(status, data);
+                }
             })
         };
 
