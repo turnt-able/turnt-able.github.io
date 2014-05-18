@@ -41,7 +41,6 @@ define(function (require) {
             }
             if (!access_token) {
                 var LOGIN_PATH = '/login.html';
-                LOGIN_PATH += window.storage.genreId ?  "#" + window.storage.genreId : "";
                 return window.location.pathname = LOGIN_PATH;
             }
             else {
