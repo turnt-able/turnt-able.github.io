@@ -36,9 +36,16 @@ define(function (require) {
       this.$node.find('#' + msg.dj.id).remove();
     };
 
+    this.activateDJ = function (evt, msg) {
+      $djs = this.$node.find('.dj person');
+      $djs.removeClass('bounce');
+      this.$node.find('#' + msg.dj.id).addClass('bounce');
+    };
+
     this.after('initialize', function () {
-      this.on(document, 'dataDJJoined', this.addDJ);
-      this.on(document, 'dataDJLeft',   this.removeDJ);
+      this.on(document, 'dataDJJoined',    this.addDJ);
+      this.on(document, 'dataDJLeft',      this.removeDJ);
+      this.on(document, 'dataDJActivated', this.activateDJ);
     });
   }
 
