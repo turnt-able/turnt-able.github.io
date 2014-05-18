@@ -116,7 +116,7 @@ define(function (require) {
         };
 
         this.broadCast = function(data) {
-            this.trigger(document, 'dataUserData', { user : data });
+            $(document).trigger('dataUserData', { user : data });
         };
 
         this.after('initialize', function () {

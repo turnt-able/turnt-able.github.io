@@ -31,7 +31,7 @@ define(function (require) {
     UIDj.attachTo('#djs');
     UIUser.attachTo('#users');
     UIRating.attachTo('#rate-box');
-    UIMarquee.attachTo(document);
+    // UIMarquee.attachTo(document);
     UIChat.attachTo('#chatlist');
 
     PlaylistMaker.attachTo(document);
