@@ -118,7 +118,7 @@ define(function (require) {
       // Create a firebase connection for this instance
       window.room = new Firebase(this.attr.fireBaseUrl + storage.genreId);
 
-      window.users = window.room.child('users');
+      window.users = users = window.room.child('users');
       djs = window.room.child('djs');
 
       users.on('child_added',   this.userJoined);
