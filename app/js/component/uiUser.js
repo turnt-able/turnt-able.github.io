@@ -49,11 +49,11 @@ define(function (require) {
     this.showUserRating = function (user) {
       var $user = this.$forUser(user.id).find('.user');
       if (user.vote === 1) {
-        $user.addClass('bounce')  
+        $user.addClass('bounce')
       } else {
         $user.removeClass('bounce');
       }
-      
+
     };
 
     this.after('initialize', function () {

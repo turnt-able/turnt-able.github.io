@@ -6,11 +6,13 @@ define(function (require) {
    * Module dependencies
    */
   var DataState = require('component/dataState');
+  var DataAuth = require('component/dataAuth');
   var PlaylistMaker = require('component/playlistMaker');
   var UIDj = require('component/uiDj');
   var UIUser = require('component/uiUser');
   var UIRating = require('component/uiRating');
   var UIMarquee = require('component/uiMarquee');
+  var UIChat = require('component/uiChat');
   var DataBAM = require('component/dataBAM');
   var DataAuth = require('component/dataAuth');
 
@@ -30,17 +32,17 @@ define(function (require) {
     UIUser.attachTo('#users');
     UIRating.attachTo('#rate-box');
     UIMarquee.attachTo(document);
+    UIChat.attachTo('#chatlist');
 
-    var user = window.localStorage.getItem("user");
-    if (!user) {
-        var DataAuth = require('component/dataAuth');
-        DataAuth.attachTo(document);
-    }
     PlaylistMaker.attachTo(document);
 
     DataState.attachTo(document,  {
       fireBaseUrl: 'https://uralgosux.firebaseio.com/'
     });
+
+    DataAuth.attachTo(document);
+
+    $(document).trigger('uiNeedsAuth', {});
 
     setTimeout(function () {
       $(document).trigger('turndownforwhat');

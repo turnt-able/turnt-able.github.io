@@ -39,7 +39,7 @@ define(function (require) {
             if (!access_token) {
                 var LOGIN_URL = window.location.host + '/login.html'
                 LOGIN_URL += window.storage.genreId ?  "#" + window.storage.genreId : "";
-                return window.location = LOGIN_URL;
+                return window.location.href = LOGIN_URL;
             }
 
             $.ajax({
