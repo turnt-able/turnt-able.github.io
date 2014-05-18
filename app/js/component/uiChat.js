@@ -53,6 +53,7 @@ define(function (require) {
           message : this.$node.find(this.attr.chatTextBox).val()
         }
       });
+      this.$node.find(this.attr.chatTextBox).val('');
     };
 
     this.keypressChat = function(evt, msg) {
