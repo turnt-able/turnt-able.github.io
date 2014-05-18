@@ -64,8 +64,20 @@ define(function (require) {
       bam.stop();
     };
 
+    this.pickupCurrentPlayContext = function (tracks) {
+      var track = tracks[window.roomVal.current_track_idx];
+      this.trigger(document, 'dataDJActivated', { dj: { id: track.dj }});
+      this.trigger(document, 'dataTrack', { track: track.track });
+    };
+
     this.setPlaylist = function (evt, msg) {
-      console.log(msg);
+      if (!msg.saved) {
+        tracks.set(msg.tracks, function () {
+          this.pickupCurrentPlayContext(msg.tracks);
+        });
+      } else {
+        this.pickupCurrentPlayContext(msg.tracks);
+      }
     };
 
     this.after('initialize', function () {
@@ -91,6 +103,8 @@ define(function (require) {
       this.on('uiPauseRequest', this.handlePauseRequest);
       this.on('uiPlayRequest', this.handlePlayRequest);
       this.on('uiStopRequest', this.handleStopRequest);
+
+      this.on(document, 'dataPlaylistTracks', this.setPlaylist);
     });
   }
 
