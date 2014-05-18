@@ -1,30 +1,9 @@
-define(function (require) {
 
-  'use strict';
-
-  /**
-   * Module dependencies
-   */
-
-  var defineComponent = require('flight/lib/component');
-
-  /**
-   * Module exports
-   */
-
-  return defineComponent(uiMarquee);
-
-  /**
-   * Module function
-   */
-
-  function uiMarquee() {
-    this.defaultAttrs({
-
-    });
-
-
-    var letters_red = null, 
+          $('#text').bind('input', function() { 
+          startAnim(); // get the current value of the input field.
+      });
+                
+          var letters_red = null, 
       sMessage = "", 
       canvas = null, 
       ctx = null, 
@@ -43,7 +22,9 @@ define(function (require) {
     
     function draw() {
       var iCounter = 0, 
-        iCharCode = 0;
+        iCharCode = 0,
+        iSpriteCol = 0,
+        iSpriteRow = 0;
       for ( iCounter = 0; iCounter < sMessage.length; iCounter++) {
         iCharCode = sMessage.charCodeAt(iCounter);
         if (iCharCode > 64 && iCharCode < 91) {
@@ -88,19 +69,9 @@ define(function (require) {
       if (canvas.getContext('2d')) {
         ctx = canvas.getContext('2d');
         letters_red = new Image();
-        letters_red.src = 'img/letters-red.jpg?v=1';
+        letters_red.src = 'letters-red.jpg?v=1';
         letters_red.onload = startAnim;
       } else {
         alert("Canvas not supported!");
       }
     }
-
-    this.after('initialize', function () {
-      $('#text').bind('input', function() { 
-          startAnim(); // get the current value of the input field.
-      });
-      init();
-    });
-  }
-
-});

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>turnt.able</title>
+    <title>turnt-able</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="/bower_components/components-bootstrap/css/bootstrap.min.css">
@@ -13,11 +13,13 @@
   </head>
   <body>
     <div class="login">
-      <div class="title">turnt.able</div>
       <form method="get" action="https://partner.api.beatsmusic.com/v1/oauth2/authorize">
         <input type="hidden" name="client_id" value="cwugqdk8f8em99j6yewzvq6m">
         <input type="hidden" name="response_type" value="token">
         <input id="preserved_redirect" type="hidden" name="redirect_uri" value="http://turnt-able.fm/">
+          <div>
+            <img class="turnt_logo" src="/img/turnt.png">
+          </div>
         <button type="submit" class="login_button">Log In
           <div>
             <img class="logo" src="/img/beats-logo.png">

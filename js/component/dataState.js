@@ -148,6 +148,11 @@ define(function (require) {
 
     this.saveRoom = function (snapshot) {
       window.roomVal = roomVal = snapshot.val();
+
+      if (!roomVal) {
+        self.initializeRoom();
+      }
+
       if (typeof tracklist !== 'undefined' && typeof roomVal !== 'undefined') {
         self.getTurntUp();
       }
@@ -176,6 +181,10 @@ define(function (require) {
 
     this.saveChat = function (evt, msg) {
       chats.push(msg.chat);
+    };
+
+    this.presenceChanged = function(snapshot) {
+      self.trigger('dataPresence', { online : snapshot.val() === true});
     };
 
     this.after('initialize', function () {
@@ -213,6 +222,9 @@ define(function (require) {
       this.on('uiNeedsUser',      this.sendUser);
       this.on('uiRated',          this.saveRating);
       this.on('uiChatted',        this.saveChat);
+
+      var presenceRef = new Firebase(this.attr.fireBaseUrl + ".info/authenticated");
+      presenceRef.on('value', this.presenceChanged);
 
       // this.on('turndownforwhat', this.getTurntUp);
     });
