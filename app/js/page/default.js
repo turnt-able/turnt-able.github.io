@@ -11,6 +11,7 @@ define(function (require) {
   var UIUser = require('component/uiUser');
   var UIRating = require('component/uiRating');
   var UIMarquee = require('component/uiMarquee');
+  var DataBAM = require('component/dataBAM');
 
   /**
    * Module exports
@@ -23,6 +24,7 @@ define(function (require) {
    */
 
   function initialize() {
+    DataBAM.attachTo(document);
     UIDj.attachTo('#djs');
     UIUser.attachTo('#users');
     UIRating.attachTo('#rate-box');
