@@ -32,7 +32,9 @@ define(function (require) {
     DataState.attachTo(document,  {
       fireBaseUrl: 'https://uralgosux.firebaseio.com/'
     });
-    if (!window.storage || !window.storage.user) {
+
+    var user = window.localStorage.getItem("user");
+    if (!user) {
         var DataAuth = require('component/dataAuth');
         DataAuth.attachTo(document);
     }
