@@ -65,7 +65,15 @@ define(function (require) {
     };
 
     this.pickupCurrentPlayContext = function (tracks) {
+      var token = window.localStorage.getItem('access_token');
+      var user = JSON.parse(window.localStorage.getItem('user'));
       var track = tracks[window.roomVal.current_track_idx];
+      bam.authentication = {
+        access_token: token,
+        user_id: user.user_context
+      };
+      bam.identifier = track.track.id;
+      bam.load();
       this.trigger(document, 'dataDJActivated', { dj: { id: track.dj }});
       this.trigger(document, 'dataTrack', { track: track.track });
     };

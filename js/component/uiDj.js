@@ -37,9 +37,9 @@ define(function (require) {
     };
 
     this.activateDJ = function (evt, msg) {
-      $djs = this.$node.find('.dj person');
-      $djs.removeClass('bounce');
-      this.$node.find('#' + msg.dj.id).addClass('bounce');
+      var $djs = this.$node.find('.dj');
+      $djs.find('.bounce').removeClass('bounce');
+      this.$node.find('#' + msg.dj.id + ' .person').addClass('bounce');
     };
 
     this.after('initialize', function () {

@@ -48,7 +48,7 @@ define(function (require) {
         chat : {
           user: {
             id: user.user_context,
-            name : user.name
+            name : user.data.username
           },
           message : this.$node.find(this.attr.chatTextBox).val()
         }
@@ -67,8 +67,8 @@ define(function (require) {
     };
 
     this.after('initialize', function () {
-      this.on(document, 'chatAdded', this.chatAdded);
-      this.on(document, 'chatRemoved', this.chatRemoved);
+      this.on(document, 'dataChatAdded', this.chatAdded);
+      this.on(document, 'dataChatRemoved', this.chatRemoved);
 
       this.on('submit', {
         'chatTextBox': this.submitChat

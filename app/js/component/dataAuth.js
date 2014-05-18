@@ -40,9 +40,8 @@ define(function (require) {
                 access_token = window.localStorage.getItem('access_token');
             }
             if (!access_token) {
-                var LOGIN_URL = window.location.host + '/login.html'
-                LOGIN_URL += window.storage.genreId ?  "#" + window.storage.genreId : "";
-                return window.location.href = LOGIN_URL;
+                var LOGIN_PATH = '/login.html';
+                return window.location.pathname = LOGIN_PATH;
             }
             else {
                 window.localStorage['access_token'] = access_token;
@@ -96,16 +95,19 @@ define(function (require) {
                 },
                 success: function(data, status) {
                     if (data && data.data) {
-                        window.localStorage["user"]['data'] = JSON.stringify(data.data);
+                        user.data = data.data;
+                        window.localStorage["user"] = JSON.stringify(user);
                         var user_id = data.data.id;
-                        var user = {};
-                        user[user_id] = {
+                        var user_data = {};
+                        user_data[user_id] = {
                             vote: 0,
                             data: data.data,
                             id : user_id,
                             username: data.data.username
                         };
-                        window.users.update(user);
+                        window.users.update(user_data);
+                        self.userRef = window.users.child(user_id);
+                        self.userRef.onDisconnect().remove();
                         self.broadCast(data);
                     }
                 },
@@ -119,9 +121,17 @@ define(function (require) {
             $(document).trigger('dataUserData', { user : data });
         };
 
+        this.updateExistence = function(evt, msg) {
+            var online = msg.online;
+            if (online && this.userRef) {
+                self.userRef.onDisconnect().remove();
+            }
+        };
+
         this.after('initialize', function () {
             this.on('uiNeedsAuth', this.fetchUser);
             this.on('uiNeedsUserData', this.fetchUserData);
+            this.on('dataPresence', this.updateExistence);
         });
     }
 });
