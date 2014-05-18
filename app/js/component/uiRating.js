@@ -20,28 +20,31 @@ define(function (require) {
 
   function uiRating() {
     var currentUser;
+    var ratings = {};
 
     this.defaultAttrs({
       'goodRatingValue': 1,
-      'badRatingValue': -1
+      'badRatingValue': -1,
+      'dope': '.up',
+      'basic': '.down'
     });
 
     this.setupCurrentUser = function (evt, msg) {
-      currentUser = {} // TODO: set up the current user
+      currentUser = JSON.parse(window.localStorage.getItem('user'));
     };
 
     this.rateDope = function (evt, msg) {
       this.trigger('uiRated', {
         user: currentUser,
         vote: this.attr.goodRatingValue
-      });
+      });      
     };
 
     this.rateBasic = function (evt, msg) {
       this.trigger('uiRated', {
         user: currentUser,
         vote: this.attr.badRatingValue
-      });
+      });      
     };
 
     this.after('initialize', function () {

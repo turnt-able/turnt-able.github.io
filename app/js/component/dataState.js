@@ -25,11 +25,15 @@ define(function (require) {
     var users;
     var djs;
     var room;
+    var track;
     var tracks;
     var tracklist;
     var roomVal;
     var chats;
     var chatsQuery;
+    var ctx;
+
+    window.currentRating = 0;
 
     window.storage = storage;
 
@@ -56,7 +60,7 @@ define(function (require) {
           artist_name: self.getGenreId()
         });
       }
-    }
+    };
 
     this.sendTrackList = function () {
     };
@@ -108,6 +112,7 @@ define(function (require) {
           rating: user.val()
         }
       });
+      console.log(user.name(), user.val());
     };
 
     // Chat Events
@@ -131,7 +136,7 @@ define(function (require) {
     };
 
     this.sendUser = function (evt, msg) {
-      users.child(msg.id).val()
+      users.child(msg.id).val();
     };
 
     this.sendUserList = function () {
@@ -144,10 +149,25 @@ define(function (require) {
 
     this.saveRating = function (evt, msg) {
       users.child(msg.user.id + '/vote').set(msg.vote);
+      djs.child(window.currentDJID).transaction(function (cv) {
+        if (cv < -10) {
+          $(document).trigger('uiHatedThisTrack');
+          $(document).trigger('uiBASIC');
+        }
+        if (cv === 10) {
+         $(document).trigger('uiDOPE');
+        }
+        return cv + msg.vote;
+      });
     };
 
     this.saveRoom = function (snapshot) {
       window.roomVal = roomVal = snapshot.val();
+
+      if (!roomVal) {
+        self.initializeRoom();
+      }
+
       if (typeof tracklist !== 'undefined' && typeof roomVal !== 'undefined') {
         self.getTurntUp();
       }
@@ -159,7 +179,7 @@ define(function (require) {
       if (typeof tracklist !== 'undefined' && typeof roomVal !== 'undefined') {
         self.getTurntUp();
       }
-    }
+    };
 
     this.initializeRoom = function (cb) {
       room.set({
@@ -167,7 +187,7 @@ define(function (require) {
         djs: {
           'echonest': 0,
           'gracenote': 0,
-          'musicgraph': 0
+          'senzari': 0
         },
         tracks: null,
         users: null
@@ -179,7 +199,35 @@ define(function (require) {
     };
 
     this.presenceChanged = function(snapshot) {
-      this.trigger('dataPresence', { online : snapshot.val() === true});
+      self.trigger('dataPresence', { online : snapshot.val() === true});
+    };
+
+    this.updateCurrentTrackIndex = function (snapshot) {
+      self.trigger('dataTrackIndex', { index: snapshot.val() || 0 });
+    };
+
+    this.resetDJs = function (evt, msg) {
+      var text = msg.track.title + ' - ' + msg.track.artist_display_name;
+      $('.song-text').html(text);
+      djs.set({
+        'echonest': 0,
+        'gracenote': 0,
+        'senzari': 0
+      });
+    };
+
+    this.showBasic = function () {
+      $('body').append('<h1 class="dope-text basic">BASIC :(</h1>');
+      setTimeout(function () {
+        $('.dope-text').fadeOut();
+      }, 1000);
+    };
+
+    this.showDope = function () {
+      $('body').append('<h1 class="dope-text dope">DOPE!</h1>');
+      setTimeout(function () {
+        $('.dope-text').fadeOut();
+      }, 1000);
     };
 
     this.after('initialize', function () {
@@ -191,9 +239,12 @@ define(function (require) {
       room  = window.room  = new Firebase(this.attr.fireBaseUrl + this.getGenreId());
 
       users  = window.users  = room.child('users');
-      djs    = window.djs    = room.child('djs');
+      djs    = room.child('djs');
       tracks = window.tracks = room.child('tracks');
       chats  = window.chats  = room.child('chats');
+      ctx    = window.ctx    = room.child('current_track_idx');
+
+      window.djs = djs;
       chatsQuery = chats.limit(100);
 
       users.on('child_added',   this.userJoined);
@@ -207,6 +258,8 @@ define(function (require) {
       tracks.once('value',   this.saveTracks);
       room.once('value', this.saveRoom);
 
+      ctx.on('value', this.updateCurrentTrackIndex);
+
       chatsQuery.on('child_added',   this.chatAdded);
       chatsQuery.on('child_removed', this.chatRemoved);
       chatsQuery.on('child_changed', this.chatChanged);
@@ -217,6 +270,11 @@ define(function (require) {
       this.on('uiNeedsUser',      this.sendUser);
       this.on('uiRated',          this.saveRating);
       this.on('uiChatted',        this.saveChat);
+
+      this.on('dataTrack', this.resetDJs);
+
+      this.on('uiBASIC', this.showBasic);
+      this.on('uiDOPE', this.showDope);
 
       var presenceRef = new Firebase(this.attr.fireBaseUrl + ".info/authenticated");
       presenceRef.on('value', this.presenceChanged);
