@@ -22,7 +22,6 @@ define(function (require) {
     var self;
     var storage = {};
     var fb;
-    var room;
     var users;
     var djs;
     window.storage = storage;
@@ -117,10 +116,10 @@ define(function (require) {
       self = this;
 
       // Create a firebase connection for this instance
-      room = new Firebase(this.attr.fireBaseUrl + storage.genreId);
+      window.room = new Firebase(this.attr.fireBaseUrl + storage.genreId);
 
-      users = room.child('users');
-      djs = room.child('djs');
+      window.users = window.room.child('users');
+      djs = window.room.child('djs');
 
       users.on('child_added',   this.userJoined);
       users.on('child_removed', this.userLeft);
