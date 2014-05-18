@@ -12,6 +12,7 @@ define(function (require) {
   var UIRating = require('component/uiRating');
   var UIMarquee = require('component/uiMarquee');
   var DataBAM = require('component/dataBAM');
+  var DataAuth = require('component/dataAuth');
 
   /**
    * Module exports
