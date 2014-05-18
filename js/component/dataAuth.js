@@ -96,16 +96,17 @@ define(function (require) {
                 },
                 success: function(data, status) {
                     if (data && data.data) {
-                        window.localStorage["user"]['data'] = JSON.stringify(data.data);
+                        user.data = data.data;
+                        window.localStorage["user"] = JSON.stringify(user);
                         var user_id = data.data.id;
-                        var user = {};
-                        user[user_id] = {
+                        var user_data = {};
+                        user_data[user_id] = {
                             vote: 0,
                             data: data.data,
                             id : user_id,
                             username: data.data.username
                         };
-                        window.users.update(user);
+                        window.users.update(user_data);
                         self.broadCast(data);
                     }
                 },
