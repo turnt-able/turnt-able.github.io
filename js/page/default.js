@@ -30,7 +30,7 @@ define(function (require) {
     DataBAM.attachTo(document);
     UIDj.attachTo('#djs');
     UIUser.attachTo('#users');
-    UIRating.attachTo('#rate-box');
+    UIRating.attachTo('.sign');
     // UIMarquee.attachTo(document);
     UIChat.attachTo('#chatlist');
 

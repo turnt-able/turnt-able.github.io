@@ -64,14 +64,21 @@ define(function (require) {
       bam.stop();
     };
 
+    this.setIndex = function (evt, msg) {
+      window.roomVal.current_track_idx = msg.index;
+      this.pickupCurrentPlayContext(tracklist);
+    };
+
     this.pickupCurrentPlayContext = function (tracks) {
       var token = window.localStorage.getItem('access_token');
       var user = JSON.parse(window.localStorage.getItem('user'));
       var track = tracks[window.roomVal.current_track_idx];
+      bam.stop();
       bam.authentication = {
         access_token: token,
         user_id: user.user_context
       };
+      bam.clientId = user.client_id;
       bam.identifier = track.track.id;
       bam.load();
       this.trigger(document, 'dataDJActivated', { dj: { id: track.dj }});
@@ -88,8 +95,14 @@ define(function (require) {
       }
     };
 
+    this.nextTrack = function () {
+      var i = window.roomVal.current_track_idx + 1;
+      window.room.child('current_track_idx').set(i);
+    };
+
     this.after('initialize', function () {
       bam = new BeatsAudioManager("myBeatsPlayer");
+      window.bam = bam;
 
       bam.on('ready', this.handleReady);
       bam.on('connectionsuccess', this.handleConnectionSuccess);
@@ -113,6 +126,8 @@ define(function (require) {
       this.on('uiStopRequest', this.handleStopRequest);
 
       this.on(document, 'dataPlaylistTracks', this.setPlaylist);
+      this.on(document, 'uiHatedThisTrack', this.nextTrack);
+      this.on(document, 'dataTrackIndex', this.setIndex);
     });
   }
 

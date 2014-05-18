@@ -40,6 +40,7 @@ define(function (require) {
       var $djs = this.$node.find('.dj');
       $djs.find('.bounce').removeClass('bounce');
       this.$node.find('#' + msg.dj.id + ' .person').addClass('bounce');
+      window.currentDJID = msg.dj.id;
     };
 
     this.after('initialize', function () {
